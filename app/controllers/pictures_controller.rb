@@ -11,6 +11,12 @@ class PicturesController < ApplicationController
         @picture=Picture.new
     end
 
+    def destroy
+        @picture = Picture.find(params[:id])
+        @picture.destroy
+        redirect_to pictures_url
+      end
+
     def create
         @picture=Picture.new(picture_params)
         
@@ -20,7 +26,13 @@ class PicturesController < ApplicationController
         else
             render :new 
         end
-     
+    end 
+
+    private
+    def picture_params
+      params.require(:picture).permit(:artist, :title, :url)
+    end
+    
     def edit
         @picture = Picture.find(params[:id])
     end
@@ -28,17 +40,12 @@ class PicturesController < ApplicationController
     def update
         @picture = Picture.find(params[:id])
 
-        if @picture.update_attributes(picture_params)
+        if @picture.update(picture_params)
             redirect_to "/pictures/#{@picture.id}"
         else render :edit
         end
     end
 
-    end
-
-    private
-    def picture_params
-      params.require(:picture).permit(:artist, :title, :url)
-    end
+  
 
 end
